@@ -1,4 +1,4 @@
-funwithnode
-===========
+Fun With Node
+============
 
-Fun with node (and other things)
+Fun with Node (and Express) (and other things…)
