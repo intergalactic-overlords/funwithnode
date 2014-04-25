@@ -9,9 +9,15 @@ var http = require("http");
  * Creating our server through the createServer method
  */
 var server = http.createServer(function(request, response) {
-  response.writeHead(200, {"Content-type":"text/plain"});
-  response.write("Hello world!");
-  response.end();
+  if (request.url === '/hello-world') {
+    response.writeHead(200, {"Content-type":"text/plain"});
+    response.write("Hello world!");
+    response.end();
+  } else {
+    response.writeHead(404, {"Content-type":"text/plain"});
+    response.write("404 - Page not found");
+    response.end();
+  }
 });
 
 /**
