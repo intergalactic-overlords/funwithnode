@@ -1,0 +1,9 @@
+{
+  "name": "funwithweb",
+  "description": "blog built in nodejs. such fun.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.x"
+  }
+}
