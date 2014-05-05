@@ -29,7 +29,7 @@ app.get('/', function (req, res) {
 // adding html
 app.get("/about", function (req, res) {
   // don't forget npm install jade
-  res.render("about.jade")
+  res.render("about.jade");
 });
 
 // blogposts overview page
