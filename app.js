@@ -10,7 +10,6 @@ var app = express();
 // setting the port
 app.set('port', process.env.PORT || 3000);
 
-
 // setting routes:
 // the method that we call is also the http method
 // first pass the route (url),
@@ -29,19 +28,8 @@ app.get('/', function (req, res) {
 
 // adding html
 app.get("/about", function (req, res) {
-  var message = [
-    "<h1>About this site</h1>",
-    "<p>I'll be creating a blog in nodejs and then I'll use that blog to blog about the creation of the blog.</p>",
-    "<p>All very meta, I know ;-).",
-    "<p>I want to learn nodejs for the following reasons:</p>",
-    "<ul>",
-    "<li>I want to get a better understanding of the web</li>",
-    "<li>I want to get better at Javascript</li>",
-    "<li>learning something new is fun</li>",
-    "</ul>",
-    "<p>&nbsp;</p>",
-    "<p>Joachim</p>"].join('\n');
-  res.send(message);
+  // don't forget npm install jade
+  res.render("about.jade")
 });
 
 // blogposts overview page
