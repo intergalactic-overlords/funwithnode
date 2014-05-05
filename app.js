@@ -44,6 +44,20 @@ app.get("/about", function (req, res) {
   res.send(message);
 });
 
+// blogposts overview page
+app.get(/\/articles/, function (req, res) {
+  res.send('all articles');
+});
+
+// blogpost route
+// \w => alphanumerical + underscore
+// - => -
+// + => multiple
+// more on regex: http://eloquentjavascript.net/chapter10.html
+app.get(/\/articles\/[\w-]+/, function (req, res) {
+  res.send('this is an article');
+});
+
 // createServer creates a default http server
 // the app is passed to createServer, and sets it up
 // pass a callback function to the app after the server has begun
