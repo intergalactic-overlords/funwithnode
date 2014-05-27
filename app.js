@@ -7,6 +7,54 @@ var app = express();
 
 // app configuration
 
+// posts
+var posts = [
+  {
+    "type": "article",
+    "title": "Post 1",
+    "path": "post-1",
+    "teaser-text": "teaser-text",
+    "body-text": "body-text",
+    "tags": ["tag1", "tag2"],
+    "date-created": "zo 25 mei 2014 15:19:09 CEST",
+    "date-updated": "zo 25 mei 2014 15:19:09 CEST",
+    "published": true
+  },
+  {
+    "type": "article",
+    "title": "Post unpublished",
+    "path": "post-unpublished",
+    "teaser-text": "teaser-text",
+    "body-text": "body-text",
+    "tags": ["tag1", "tag2"],
+    "date-created": "zo 25 mei 2014 17:19:09 CEST",
+    "date-updated": "zo 25 mei 2014 17:19:09 CEST",
+    "published": false
+  },
+  {
+    "type": "article",
+    "title": "Post 2",
+    "path": "post-2",
+    "teaser-text": "teaser-text 2",
+    "body-text": "body-text 2",
+    "tags": ["tag1", "tag3"],
+    "date-created": "zo 25 mei 2014 16:19:09 CEST",
+    "date-updated": "ma 26 mei 2014 08:19:09 CEST",
+    "published": true
+  },
+  {
+    "type": "article",
+    "title": "Post 3",
+    "path": "post-3",
+    "teaser-text": "teaser-text 3",
+    "body-text": "body-text 3",
+    "tags": ["tag1", "tag2", "tag3"],
+    "date-created": "di 27 mei 2014 07:19:09 CEST",
+    "date-updated": "di 27 mei 2014 07:19:09 CEST",
+    "published": true
+  }
+]
+
 // setting the port
 app.set('port', process.env.PORT || 3000);
 
@@ -27,23 +75,29 @@ app.get('/', function (req, res) {
 });
 
 // adding html
-app.get("/about", function (req, res) {
+app.get('/about', function (req, res) {
   // don't forget npm install jade
   res.render("about.jade");
 });
 
 // blogposts overview page
-app.get(/\/articles/, function (req, res) {
+/*app.get('/articles', function (req, res) {
   res.send('all articles');
-});
+});*/
+
+function loadPost (req, res, next) {
+  posts.forEach(function(thisPost) {
+    if (thisPost.path !== undefined && if (req.params.path === thisPost.path)) {
+      req.post = thisPost;
+    }
+  });
+
+  next();
+}
 
 // blogpost route
-// \w => alphanumerical + underscore
-// - => -
-// + => multiple
-// more on regex: http://eloquentjavascript.net/chapter10.html
-app.get(/\/articles\/[\w-]+/, function (req, res) {
-  res.send('this is an article');
+app.get('/articles/:path', loadPost, function (req, res) {
+  res.json(req.post);
 });
 
 // createServer creates a default http server
