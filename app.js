@@ -7,10 +7,11 @@ var app = express();
 
 // app configuration
 
-function Article(type, title, path, teaserText, bodyText, tags, dateCreated, dateUpdated, published) {
+function Article(type, title, path, author, teaserText, bodyText, tags, dateCreated, dateUpdated, published) {
   this.type = type;
   this.title = title;
   this.path = path;
+  this.author = author;
   this.teaserText = teaserText;
   this.bodyText = bodyText;
   this.tags = tags;
@@ -25,6 +26,7 @@ var posts = [
     "article",
     "Post 1",
     "post-1",
+    "me",
     "teaserText",
     "Nullam quis risus eget urna mollis ornare vel eu leo.",
     ["tag1", "tag2"],
@@ -36,6 +38,7 @@ var posts = [
     "article",
     "Post unpublished",
     "post-unpublished",
+    "me",
     "teaserText u",
     "Nulla vitae elit libero, a pharetra augue.",
     ["tag1", "tag2"],
@@ -47,6 +50,7 @@ var posts = [
     "article",
     "Post 2",
     "post-2",
+    "me",
     "teaserText 2",
     "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
     ["tag1", "tag3"],
@@ -58,6 +62,7 @@ var posts = [
     "article",
     "Post 3",
     "post-3",
+    "me",
     "teaserText 3",
     "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
     ["tag1", "tag2", "tag3"],
