@@ -38,7 +38,7 @@ var posts = [
     "article",
     "Post unpublished",
     "post-unpublished",
-    "me",
+    "you",
     "teaserText u",
     "Nulla vitae elit libero, a pharetra augue.",
     ["tag1", "tag2"],
