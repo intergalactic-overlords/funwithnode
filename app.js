@@ -7,52 +7,64 @@ var app = express();
 
 // app configuration
 
+function Article(type, title, path, teaserText, bodyText, tags, dateCreated, dateUpdated, published) {
+  this.type = type;
+  this.title = title;
+  this.path = path;
+  this.teaserText = teaserText;
+  this.bodyText = bodyText;
+  this.tags = tags;
+  this.dateCreated = dateCreated;
+  this.dateUpdated = dateUpdated;
+  this.published = published;
+}
+
 // posts
 var posts = [
-  {
-    "type": "article",
-    "title": "Post 1",
-    "path": "post-1",
-    "teaserText": "teaserText",
-    "bodyText": "Nullam quis risus eget urna mollis ornare vel eu leo.",
-    "tags": ["tag1", "tag2"],
-    "dateCreated": "zo 25 mei 2014 15:19:09 CEST",
-    "dateUpdated": "zo 25 mei 2014 15:19:09 CEST",
-    "published": true
-  },
-  {
-    "type": "article",
-    "title": "Post unpublished",
-    "path": "post-unpublished",
-    "teaserText": "teaserText u",
-    "bodyText": "Nulla vitae elit libero, a pharetra augue.",
-    "tags": ["tag1", "tag2"],
-    "dateCreated": "zo 25 mei 2014 17:19:09 CEST",
-    "dateUpdated": "zo 25 mei 2014 17:19:09 CEST",
-    "published": false
-  },
-  {
-    "type": "article",
-    "title": "Post 2",
-    "path": "post-2",
-    "teaserText": "teaserText 2",
-    "bodyText": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
-    "tags": ["tag1", "tag3"],
-    "dateCreated": "zo 25 mei 2014 16:19:09 CEST",
-    "dateUpdated": "ma 26 mei 2014 08:19:09 CEST",
-    "published": true
-  },
-  {
-    "type": "article",
-    "title": "Post 3",
-    "path": "post-3",
-    "teaserText": "teaserText 3",
-    "bodyText": "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
-    "tags": ["tag1", "tag2", "tag3"],
-    "dateCreated": "di 27 mei 2014 07:19:09 CEST",
-    "dateUpdated": "di 27 mei 2014 07:19:09 CEST",
-    "published": true
-  }
+  new Article (
+    "article",
+    "Post 1",
+    "post-1",
+    "teaserText",
+    "Nullam quis risus eget urna mollis ornare vel eu leo.",
+    ["tag1", "tag2"],
+    "zo 25 mei 2014 15:19:09 CEST",
+    "zo 25 mei 2014 15:19:09 CEST",
+    true
+  ),
+  new Article (
+    "article",
+    "Post unpublished",
+    "post-unpublished",
+    "teaserText u",
+    "Nulla vitae elit libero, a pharetra augue.",
+    ["tag1", "tag2"],
+    "zo 25 mei 2014 17:19:09 CEST",
+    "zo 25 mei 2014 17:19:09 CEST",
+    false
+  ),
+  new Article (
+    "article",
+    "Post 2",
+    "post-2",
+    "teaserText 2",
+    "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
+    ["tag1", "tag3"],
+    "zo 25 mei 2014 16:19:09 CEST",
+    "ma 26 mei 2014 08:19:09 CEST",
+    true
+  ),
+  new Article (
+    "article",
+    "Post 3",
+    "post-3",
+    "teaserText 3",
+    "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+    ["tag1", "tag2", "tag3"],
+    "di 27 mei 2014 07:19:09 CEST",
+    "di 27 mei 2014 07:19:09 CEST",
+    true
+  )
 ];
 
 // setting the port
@@ -95,7 +107,6 @@ function loadPosts (req, res, next) {
 
 // blogposts overview page
 app.get('/articles', loadPosts, function (req, res) {
-  console.log(req.output);
   res.render("articles.jade", req.output);
 });
 
@@ -115,7 +126,6 @@ function loadPost (req, res, next) {
 
 // blogpost route
 app.get('/articles/:path', loadPost, function (req, res) {
-  console.log(req.post);
   if (req.post.type == 'article') {
     res.render("article.jade", req.post);
   }
