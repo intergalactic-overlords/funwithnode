@@ -13,47 +13,47 @@ var posts = [
     "type": "article",
     "title": "Post 1",
     "path": "post-1",
-    "teaser-text": "teaser-text",
-    "body-text": "body-text",
+    "teaserText": "teaserText",
+    "bodyText": "Nullam quis risus eget urna mollis ornare vel eu leo.",
     "tags": ["tag1", "tag2"],
-    "date-created": "zo 25 mei 2014 15:19:09 CEST",
-    "date-updated": "zo 25 mei 2014 15:19:09 CEST",
+    "dateCreated": "zo 25 mei 2014 15:19:09 CEST",
+    "dateUpdated": "zo 25 mei 2014 15:19:09 CEST",
     "published": true
   },
   {
     "type": "article",
     "title": "Post unpublished",
     "path": "post-unpublished",
-    "teaser-text": "teaser-text",
-    "body-text": "body-text",
+    "teaserText": "teaserText u",
+    "bodyText": "Nulla vitae elit libero, a pharetra augue.",
     "tags": ["tag1", "tag2"],
-    "date-created": "zo 25 mei 2014 17:19:09 CEST",
-    "date-updated": "zo 25 mei 2014 17:19:09 CEST",
+    "dateCreated": "zo 25 mei 2014 17:19:09 CEST",
+    "dateUpdated": "zo 25 mei 2014 17:19:09 CEST",
     "published": false
   },
   {
     "type": "article",
     "title": "Post 2",
     "path": "post-2",
-    "teaser-text": "teaser-text 2",
-    "body-text": "body-text 2",
+    "teaserText": "teaserText 2",
+    "bodyText": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
     "tags": ["tag1", "tag3"],
-    "date-created": "zo 25 mei 2014 16:19:09 CEST",
-    "date-updated": "ma 26 mei 2014 08:19:09 CEST",
+    "dateCreated": "zo 25 mei 2014 16:19:09 CEST",
+    "dateUpdated": "ma 26 mei 2014 08:19:09 CEST",
     "published": true
   },
   {
     "type": "article",
     "title": "Post 3",
     "path": "post-3",
-    "teaser-text": "teaser-text 3",
-    "body-text": "body-text 3",
+    "teaserText": "teaserText 3",
+    "bodyText": "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
     "tags": ["tag1", "tag2", "tag3"],
-    "date-created": "di 27 mei 2014 07:19:09 CEST",
-    "date-updated": "di 27 mei 2014 07:19:09 CEST",
+    "dateCreated": "di 27 mei 2014 07:19:09 CEST",
+    "dateUpdated": "di 27 mei 2014 07:19:09 CEST",
     "published": true
   }
-]
+];
 
 // setting the port
 app.set('port', process.env.PORT || 3000);
@@ -80,24 +80,60 @@ app.get('/about', function (req, res) {
   res.render("about.jade");
 });
 
-// blogposts overview page
-/*app.get('/articles', function (req, res) {
-  res.send('all articles');
-});*/
-
-function loadPost (req, res, next) {
+function loadPosts (req, res, next) {
+  var output = [];
   posts.forEach(function(thisPost) {
-    if (thisPost.path !== undefined && if (req.params.path === thisPost.path)) {
-      req.post = thisPost;
+    if (thisPost.path !== undefined && thisPost.published) {
+      output.push(thisPost);
     }
   });
+  req.output = {};
+  req.output.posts = output;
 
   next();
 }
 
+// blogposts overview page
+app.get('/articles', loadPosts, function (req, res) {
+  console.log(req.output);
+  res.render("articles.jade", req.output);
+});
+
+function loadPost (req, res, next) {
+  posts.forEach(function(thisPost) {
+    if (thisPost.path !== undefined && (req.params.path === thisPost.path)) {
+      req.post = thisPost;
+      next();
+    }
+  });
+
+  // default
+  var err = new Error();
+  err.status = 404;
+  next(err);
+}
+
 // blogpost route
 app.get('/articles/:path', loadPost, function (req, res) {
-  res.json(req.post);
+  console.log(req.post);
+  if (req.post.type == 'article') {
+    res.render("article.jade", req.post);
+  }
+});
+
+app.get('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
+
+// handling 404 errors
+app.use(function(err, req, res, next) {
+  if(err.status !== 404) {
+    return next();
+  }
+
+  res.send(err.message || '** no unicorns here **');
 });
 
 // createServer creates a default http server
