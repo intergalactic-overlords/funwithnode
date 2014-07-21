@@ -1,14 +1,24 @@
 // require modules
 var express = require('express');
+var path = require('path');
 var http = require('http');
+
+var routes = require('./routes/index');
+var articles = require('./routes/articles');
 
 // create our express app
 var app = express();
 
-// app configuration
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
-function Article(type, title, path, author, teaserText, bodyText, tags, dateCreated, dateUpdated, published) {
-  this.type = type;
+// setting the port
+app.set('port', process.env.PORT || 3000);
+
+// article object
+function Article(title, path, author, teaserText, bodyText, tags, dateCreated, dateUpdated, published) {
+  this.type = "article";
   this.title = title;
   this.path = path;
   this.author = author;
@@ -20,60 +30,14 @@ function Article(type, title, path, author, teaserText, bodyText, tags, dateCrea
   this.published = published;
 }
 
-// posts
-var posts = [
-  new Article (
-    "article",
-    "Post 1",
-    "post-1",
-    "me",
-    "teaserText",
-    "Nullam quis risus eget urna mollis ornare vel eu leo.",
-    ["tag1", "tag2"],
-    "zo 25 mei 2014 15:19:09 CEST",
-    "zo 25 mei 2014 15:19:09 CEST",
-    true
-  ),
-  new Article (
-    "article",
-    "Post unpublished",
-    "post-unpublished",
-    "you",
-    "teaserText u",
-    "Nulla vitae elit libero, a pharetra augue.",
-    ["tag1", "tag2"],
-    "zo 25 mei 2014 17:19:09 CEST",
-    "zo 25 mei 2014 17:19:09 CEST",
-    false
-  ),
-  new Article (
-    "article",
-    "Post 2",
-    "post-2",
-    "me",
-    "teaserText 2",
-    "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
-    ["tag1", "tag3"],
-    "zo 25 mei 2014 16:19:09 CEST",
-    "ma 26 mei 2014 08:19:09 CEST",
-    true
-  ),
-  new Article (
-    "article",
-    "Post 3",
-    "post-3",
-    "me",
-    "teaserText 3",
-    "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
-    ["tag1", "tag2", "tag3"],
-    "di 27 mei 2014 07:19:09 CEST",
-    "di 27 mei 2014 07:19:09 CEST",
-    true
-  )
-];
 
-// setting the port
-app.set('port', process.env.PORT || 3000);
+// database tutorial: http://cwbuecheler.com/web/tutorials/2014/restful-web-app-node-express-mongodb/
+
+
+
+// routes
+app.use('/', routes);
+app.use('/', articles);
 
 // setting routes:
 // the method that we call is also the http method
@@ -86,55 +50,27 @@ app.get("/hello-web", function (req, res) {
   res.send("Hello Web");
 });
 
-// homepage
-app.get('/', function (req, res) {
-  res.send('homepage');
-});
-
-// adding html
 app.get('/about', function (req, res) {
-  // don't forget npm install jade
   res.render("about.jade");
 });
 
-function loadPosts (req, res, next) {
-  var output = [];
+/*function loadArticles (req, res, next) {
+  var articles = [];
   posts.forEach(function(thisPost) {
-    if (thisPost.path !== undefined && thisPost.published) {
-      output.push(thisPost);
+    if (thisPost.type == 'article' && thisPost.path !== undefined && thisPost.published) {
+      articles.push(thisPost);
     }
   });
   req.output = {};
-  req.output.posts = output;
+  req.output.articles = articles;
 
   next();
 }
 
 // blogposts overview page
-app.get('/articles', loadPosts, function (req, res) {
+app.get('/articles', loadArticles, function (req, res) {
   res.render("articles.jade", req.output);
-});
-
-function loadPost (req, res, next) {
-  posts.forEach(function(thisPost) {
-    if (thisPost.path !== undefined && (req.params.path === thisPost.path)) {
-      req.post = thisPost;
-      next();
-    }
-  });
-
-  // default
-  var err = new Error();
-  err.status = 404;
-  next(err);
-}
-
-// blogpost route
-app.get('/articles/:path', loadPost, function (req, res) {
-  if (req.post.type == 'article') {
-    res.render("article.jade", req.post);
-  }
-});
+});*/
 
 app.get('*', function(req, res, next) {
   var err = new Error();
@@ -148,7 +84,7 @@ app.use(function(err, req, res, next) {
     return next();
   }
 
-  res.send(err.message || '** no unicorns here **');
+  res.send(err.message || '** nothing to see, move along **');
 });
 
 // createServer creates a default http server
@@ -157,3 +93,52 @@ app.use(function(err, req, res, next) {
 http.createServer(app).listen(app.get('port'), function() {
   console.log("Express listening on port " + app.get('port'));
 });
+
+/*
+db.content.insert({
+type: "article",
+title:"Post 1",
+path:"post-1",
+author:"me",
+teaserText:"teaserText",
+bodyText:"Nullam quis risus eget urna mollis ornare vel eu leo.",
+tags:["tag1", "tag2"],
+dateCreated:"zo 25 mei 2014 15:19:09 CEST",
+dateUpdated:"zo 25 mei 2014 15:19:09 CEST",
+published:true
+},
+{
+type: "article",
+title:"Post unpublished",
+path:"post-unpublished",
+author:"you",
+teaserText:"teaserText u",
+bodyText:"Nulla vitae elit libero, a pharetra augue.",
+tags:["tag1", "tag2"],
+dateCreated:"zo 25 mei 2014 17:19:09 CEST",
+dateUpdated:"zo 25 mei 2014 17:19:09 CEST",
+published:false
+},
+{
+type: "article",
+title:"Post 2",
+path:"post-2",
+author:"me",
+teaserText:"teaserText 2",
+bodyText:"Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
+tags:["tag1", "tag3"],
+dateCreated:"zo 25 mei 2014 16:19:09 CEST",
+dateUpdated:"ma 26 mei 2014 08:19:09 CEST",
+published:true
+},
+{
+type: "article",
+  title:"Post 3",
+  path:"post-3",
+  author:"me",
+  teaserText:"teaserText 3",
+  bodyText:"Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+  tags:["tag1", "tag2", "tag3"],
+  dateCreated:"di 27 mei 2014 07:19:09 CEST",
+  dateUpdated:"di 27 mei 2014 07:19:09 CEST",
+  published:true});*/
