@@ -54,39 +54,6 @@ app.get('/about', function (req, res) {
   res.render("about.jade");
 });
 
-/*function loadArticles (req, res, next) {
-  var articles = [];
-  posts.forEach(function(thisPost) {
-    if (thisPost.type == 'article' && thisPost.path !== undefined && thisPost.published) {
-      articles.push(thisPost);
-    }
-  });
-  req.output = {};
-  req.output.articles = articles;
-
-  next();
-}
-
-// blogposts overview page
-app.get('/articles', loadArticles, function (req, res) {
-  res.render("articles.jade", req.output);
-});*/
-
-app.get('*', function(req, res, next) {
-  var err = new Error();
-  err.status = 404;
-  next(err);
-});
-
-// handling 404 errors
-app.use(function(err, req, res, next) {
-  if(err.status !== 404) {
-    return next();
-  }
-
-  res.send(err.message || '** nothing to see, move along **');
-});
-
 // createServer creates a default http server
 // the app is passed to createServer, and sets it up
 // pass a callback function to the app after the server has begun

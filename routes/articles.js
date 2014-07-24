@@ -72,6 +72,7 @@ function loadArticles (req, res, next) {
   req.output = {};
   req.output.articles = articles;
 
+
   next();
 }
 
@@ -88,6 +89,7 @@ function loadArticle (req, res, next) {
   err.status = 404;
   next(err);
 }
+
 
 /* GET articles overview page. */
 router.get('/articles', loadArticles, function(req, res) {
