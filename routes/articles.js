@@ -62,10 +62,11 @@ var posts = [
   )
 ];
 
+
 function loadArticles (req, res, next) {
   var articles = [];
   posts.forEach(function(thisPost) {
-    if (thisPost.type == 'article' && thisPost.path !== undefined && thisPost.published) {
+    if (thisPost.type === 'article' && thisPost.path !== undefined && thisPost.published) {
       articles.push(thisPost);
     }
   });
@@ -78,7 +79,7 @@ function loadArticles (req, res, next) {
 
 function loadArticle (req, res, next) {
   posts.forEach(function(thisPost) {
-    if (thisPost.type == 'article' && thisPost.path !== undefined && req.params.path === thisPost.path) {
+    if (thisPost.type === 'article' && thisPost.path !== undefined && req.params.path === thisPost.path) {
       req.article = thisPost;
       next();
     }
